@@ -1,0 +1,56 @@
+---
+- name: install packages
+  apt: name={{ item }} state=latest
+  with_items:
+    - openjdk-7-jre-headless
+    - screen
+
+- name: add minecraft user
+  user:
+    name: "{{ minecraft_user }}"
+    shell: /bin/bash
+    home: "{{ minecraft_root_dir }}"
+
+- file:
+    path: "{{ minecraft_root_dir }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_user }}"
+    mode: 0755
+
+- file:
+    path: "{{ minecraft_root_dir }}"
+    state: directory
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_user }}"
+    mode: 0755
+
+- name: download minecraft server jar
+  get_url:
+    url="{{ minecraft_server_download_url }}"
+    dest="{{ minecraft_root_dir }}/minecraft_server.{{ minecraft_server_version }}.jar"
+    owner="{{ minecraft_user }}"
+    group="{{ minecraft_user }}"
+    mode=0644
+
+- name: setup run.sh
+  template:
+    src=run.sh.j2
+    dest="{{ minecraft_root_dir }}/run.sh"
+    owner="{{ minecraft_user }}"
+    group="{{ minecraft_user }}"
+    mode=744
+
+- name: copy eula
+  copy:
+    src: eula.txt
+    dest: "{{ minecraft_root_dir }}/eula.txt"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_user }}"
+    mode: 0644
+
+- name: start minecraft
+  shell: screen -dmS minecraft ./run.sh
+  args:
+    chdir: "{{ minecraft_root_dir }}"
+  become_user: "{{ minecraft_user }}"

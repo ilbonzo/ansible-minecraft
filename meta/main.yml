@@ -1,0 +1,11 @@
+galaxy_info:
+  author: Matteo Magni
+  description: just another geek
+  license: license Apache 2.0
+  platforms:
+    - name: Debian
+      versions:
+      - jessie
+  categories:
+    - system
+  dependencies: []
