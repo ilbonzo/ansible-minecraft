@@ -1,5 +1,3 @@
-# ansible-minecraft
-=======
 Minecraft ansible role
 =========
 
