@@ -1,9 +1,6 @@
 ---
 - name: install packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - openjdk-7-jre-headless
-    - screen
+  apt: name={{ minecraft_deps }} state=latest update_cache=yes
 
 - name: add minecraft user
   user:

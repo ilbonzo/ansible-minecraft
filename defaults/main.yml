@@ -1,4 +1,7 @@
 ---
+minecraft_deps:
+  - openjdk-8-jre-headless
+  - screen
 minecraft_root_dir: "/opt/minecraft"
 minecraft_jar_dir: "{{ minecraft_root_dir }}/jars"
 minecraft_backup_dir: "/tmp"
