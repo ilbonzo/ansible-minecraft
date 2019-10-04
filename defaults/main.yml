@@ -7,4 +7,3 @@ minecraft_jar_dir: "{{ minecraft_root_dir }}/jars"
 minecraft_backup_dir: "/tmp"
 minecraft_user: minecraft
 minecraft_server_version: "1.10.2"
-minecraft_server_download_url: "https://s3.amazonaws.com/Minecraft.Download/versions/{{ minecraft_server_version }}/minecraft_server.{{ minecraft_server_version }}.jar"

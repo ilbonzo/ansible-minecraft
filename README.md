@@ -14,7 +14,11 @@ Debian based system
 Role Variables
 --------------
 
-There are no mandatory variables.
+There are no mandatory variables.  Minecraft 1.10.2 will be installed by default.  You can specify a custom version:
+
+```yaml
+minecraft_server_version: 1.14.3
+```
 
 Dependencies
 ------------
@@ -33,4 +37,3 @@ License
 -------
 
 Apache license
-
