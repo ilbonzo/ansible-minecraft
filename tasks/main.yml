@@ -1,9 +1,6 @@
 ---
 - name: install packages
-  apt: name={{ item }} state=latest
-  with_items:
-    - openjdk-7-jre-headless
-    - screen
+  apt: name={{ minecraft_deps }} state=latest update_cache=yes
 
 - name: add minecraft user
   user:
@@ -25,13 +22,43 @@
     group: "{{ minecraft_user }}"
     mode: 0755
 
-- name: download minecraft server jar
+- name: get list of minecraft builds
+  uri:
+    url: "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+  register: minecraft_vers_list
+
+- name: search for latest version and get info url
+  set_fact: 
+    minecraft_version_url: "{{ minecraft_vers_list.json | json_query(query)  }}"
+  vars:
+    # Query to look up the latest minecraft
+    query: "versions[?id=='{{ minecraft_vers_list.json.latest.release }}'].url"
+  when: minecraft_server_version == "latest"
+
+- name: search specific version and get info url
+  set_fact: 
+    minecraft_version_url: "{{ minecraft_vers_list.json | json_query(query)  }}"
+  vars:
+    # Query to look up the minecraft version url
+    query: "versions[?id=='{{ minecraft_server_version }}'].url"
+  when: minecraft_server_version != "latest"
+
+- name: get minecraft download url
+  uri:
+    url: "{{ minecraft_version_url[0] }}"
+  register: minecraft_version_info
+
+- name: set minecraft download url
+  set_fact: 
+    minecraft_download_url: "{{ minecraft_version_info.json.downloads.server.url }}"
+
+- name: getting the minecraft server
   get_url:
-    url="{{ minecraft_server_download_url }}"
-    dest="{{ minecraft_root_dir }}/minecraft_server.{{ minecraft_server_version }}.jar"
-    owner="{{ minecraft_user }}"
-    group="{{ minecraft_user }}"
-    mode=0644
+    url: "{{ minecraft_download_url }}"
+    dest: "{{ minecraft_root_dir }}/minecraft_server.{{ minecraft_server_version }}.jar"
+    owner: "{{ minecraft_user }}"
+    group: "{{ minecraft_user }}"
+    mode: "0644"
 
 - name: setup run.sh
   template:

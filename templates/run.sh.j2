@@ -2,4 +2,4 @@
 BINDIR=$(dirname "$(readlink -fn "$0")")
 cd "$BINDIR"
 
-java -Xms1024M -Xmx1536M -jar minecraft_server.{{ minecraft_server_version }}.jar -o true
+java -Xms2048M -Xmx2048M -jar minecraft_server.{{ minecraft_server_version }}.jar
